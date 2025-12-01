@@ -4,13 +4,3 @@ spring:
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
-mybatis:
-  # Mapper.xml 文件存放路径（resources/mapper 目录下）
-  mapper-locations: classpath:mapper/*.xml
-  # 实体类别名包（简化 Mapper.xml 中的类路径）
-  type-aliases-package: com.springboot2.pojo
-  configuration:
-    # 开启驼峰命名自动转换（数据库字段 user_name → 实体类 userName）
-    map-underscore-to-camel-case: true
-    # 打印 SQL 日志（开发环境调试用）
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
