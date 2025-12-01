@@ -2,6 +2,7 @@ package com.springboot2.dao;
 
 import com.springboot2.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * author: admin
@@ -9,6 +10,6 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface UserMapper {
-    User selectByUsername(String username, Integer role);
+    User selectByUsername(@Param("username") String username, @Param("role") Integer role );
     int insertUser(User user);
 }

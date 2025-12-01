@@ -1,15 +1,217 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-  <title>欢迎</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>欢迎登录 - 健身管理系统</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; margin-top: 100px; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Microsoft YaHei", Arial, sans-serif;
+      display: flex;
+      min-height: 100vh;
+      background-color: #f5f7fa;
+    }
+
+    /* 左侧功能栏样式 */
+    .sidebar {
+      width: 240px;
+      background-color: #2d3748;
+      color: #fff;
+      padding: 20px 0;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+
+    .sidebar-header {
+      padding: 0 20px 20px;
+      border-bottom: 1px solid #4a5568;
+      margin-bottom: 20px;
+    }
+
+    .sidebar-header h2 {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .menu {
+      list-style: none;
+    }
+
+    .menu-item {
+      margin-bottom: 4px;
+    }
+
+    .menu-link {
+      display: block;
+      padding: 12px 20px;
+      color: #e2e8f0;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      font-size: 14px;
+    }
+
+    .menu-link:hover {
+      background-color: #4a5568;
+      color: #fff;
+      padding-left: 25px;
+    }
+
+    .menu-link.active {
+      background-color: #3182ce;
+      border-left: 4px solid #63b3ed;
+      color: #fff;
+    }
+
+    /* 主内容区域样式 */
+    .main-content {
+      flex: 1;
+      padding: 40px;
+      text-align: center;
+      background-color: #fff;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    .welcome-box {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 50px 30px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .welcome-box h1 {
+      font-size: 28px;
+      color: #2d3748;
+      margin-bottom: 15px;
+    }
+
+    .welcome-box .username {
+      color: #3182ce;
+      font-weight: 600;
+    }
+
+    .welcome-box p {
+      font-size: 16px;
+      color: #718096;
+      margin: 20px 0 30px;
+    }
+
+    .btn-home {
+      display: inline-block;
+      padding: 10px 30px;
+      background-color: #3182ce;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-home:hover {
+      background-color: #2b6cb0;
+      transform: translateY(-2px);
+    }
+
+    /* 响应式适配 */
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        padding: 15px 0;
+      }
+
+      .menu {
+        display: flex;
+        overflow-x: auto;
+        padding: 0 10px;
+      }
+
+      .menu-item {
+        margin-bottom: 0;
+        margin-right: 8px;
+      }
+
+      .menu-link {
+        padding: 8px 15px;
+        white-space: nowrap;
+      }
+
+      .menu-link:hover {
+        padding-left: 15px;
+      }
+
+      .main-content {
+        padding: 20px;
+      }
+
+      .welcome-box {
+        padding: 30px 20px;
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>欢迎你，<span th:text="${username}"></span>！</h1>
-  <p>登录成功！</p>
-  <a href="/">返回首页</a>
+<!-- 左侧功能栏 -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <h2>健身管理系统</h2>
+  </div>
+  <ul class="menu">
+    <li class="menu-item">
+      <a href="/" class="menu-link active">系统首页</a>
+    </li>
+    <li class="menu-item">
+      <a href="/personal-center" class="menu-link">个人中心</a>
+    </li>
+    <li class="menu-item">
+      <a href="/user-management" class="menu-link">用户管理</a>
+    </li>
+    <li class="menu-item">
+      <a href="/coach-management" class="menu-link">教练管理</a>
+    </li>
+    <li class="menu-item">
+      <a href="/course-management" class="menu-link">健身课程管理</a>
+    </li>
+    <li class="menu-item">
+      <a href="/equipment-management" class="menu-link">健身器材管理</a>
+    </li>
+    <li class="menu-item">
+      <a href="/fitness-record" class="menu-link">健身记录管理</a>
+    </li>
+    <li class="menu-item">
+      <a href="/body-data" class="menu-link">身体数据管理</a>
+    </li>
+    <li class="menu-item">
+      <a href="/new-message" class="menu-link">新留言</a>
+    </li>
+    <li class="menu-item">
+      <a href="/system-management" class="menu-link">系统管理</a>
+    </li>
+    <li class="menu-item">
+      <a href="/order-management" class="menu-link">订单管理</a>
+    </li>
+  </ul>
+</aside>
+
+<!-- 主内容区域 -->
+<main class="main-content">
+  <div class="welcome-box">
+    <h1>欢迎你，<span class="username" th:text="${username}"></span>！</h1>
+    <p>登录成功，感谢使用健身管理系统</p>
+    <a href="/" class="btn-home">返回首页</a>
+  </div>
+</main>
 </body>
 </html>
