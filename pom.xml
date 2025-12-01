@@ -53,9 +53,9 @@
         </dependency>
         <!-- mybatis -->
         <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis</artifactId>
-            <version>3.5.19</version>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>3.0.5</version>
         </dependency>
         <!-- thymeleaf -->
         <dependency>
@@ -69,6 +69,7 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
+        <!-- lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
