@@ -1,41 +1,251 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>注册</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户注册 - 健身房管理系统</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 400px; margin: 50px auto; padding: 20px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; }
-        input { width: 100%; padding: 8px; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; }
-        .error { color: red; text-align: center; }
-        .link { text-align: center; margin-top: 15px; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            /* 健身房主题背景图（本地图片路径，可替换为在线图） */
+            background-image: url('/image/gym.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+
+        /* 半透明遮罩层（提升表单可读性） */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.65);
+            z-index: -1;
+        }
+
+        .register-container {
+            background-color: rgba(255, 255, 255, 0.95);
+            width: 100%;
+            max-width: 450px;
+            padding: 1.8rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(8px);
+            position: relative;
+            z-index: 1;
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .register-header h2 {
+            color: #1a1a1a;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .register-header p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        /* 角色选择样式 */
+        .role-selection {
+            margin-bottom: 1.1rem;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            background-color: #fafafa;
+        }
+
+        .role-selection label {
+            display: block;
+            margin-bottom: 0.8rem;
+            color: #333;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .role-radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .radio-item input[type="radio"] {
+            margin-right: 0.6rem;
+            width: auto;
+            cursor: pointer;
+            accent-color: #28a745; /* 单选框选中颜色（与注册按钮一致） */
+        }
+
+        .radio-item label {
+            margin-bottom: 0;
+            cursor: pointer;
+            font-weight: 400;
+            color: #444;
+        }
+
+        /* 表单组样式 */
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.6rem;
+            color: #333;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.95rem 1.1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #28a745;
+            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+        }
+
+        /* 注册按钮样式 */
+        .btn-register {
+            width: 100%;
+            padding: 1rem;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.05rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-top: 0.5rem;
+        }
+
+        .btn-register:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+
+        .btn-register:active {
+            transform: translateY(0);
+        }
+
+        /* 错误提示样式 */
+        .error {
+            background-color: #fef2f2;
+            color: #dc3545;
+            padding: 0.9rem;
+            border-radius: 6px;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            border: 1px solid #fecdd3;
+        }
+
+        /* 链接区域样式 */
+        .link-section {
+            text-align: center;
+            margin-top: 1.8rem;
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .link-section a {
+            color: #28a745;
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: 0.3rem;
+        }
+
+        .link-section a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
-<h2>用户注册</h2>
-
-<div th:if="${error}" class="error" th:text="${error}"></div>
-
-<form action="/register" method="post" th:object="${user}">
-    <div class="form-group">
-        <label for="username">用户名:</label>
-        <input type="text" id="username" th:field="*{username}" required>
+<div class="register-container">
+    <div class="register-header">
+        <h2>用户注册</h2>
+        <p>填写以下信息，加入我们的健身大家庭</p>
     </div>
-    <div class="form-group">
-        <label for="password">密码:</label>
-        <input type="password" id="password" th:field="*{password}" required>
-    </div>
-    <div class="form-group">
-        <label for="email">邮箱:</label>
-        <input type="email" id="email" th:field="*{email}" required>
-    </div>
-    <button type="submit">注册</button>
-</form>
 
-<div class="link">
-    <p>已有账号？<a href="/login">立即登录</a></p>
+    <!-- 错误提示 -->
+    <div th:if="${error}" class="error" th:text="${error}"></div>
+
+    <form action="/register" method="post" th:object="${user}">
+        <!-- 角色选择（与登录页一致，支持多角色注册） -->
+        <div class="role-selection">
+            <label>注册角色</label>
+            <div class="role-radio-group">
+                <div class="radio-item">
+                    <input type="radio" id="role-student" name="role" value="1" checked> <!-- student：学员 -->
+                    <label for="role-student">学员</label>
+                </div>
+                <div class="radio-item">
+                    <input type="radio" id="role-coach" name="role" value="2"> <!-- coach：教练 -->
+                    <label for="role-coach">教练</label>
+                </div>
+                <div class="radio-item">
+                    <input type="radio" id="role-admin" name="role" value="3"> <!-- admin：管理员 -->
+                    <label for="role-admin">管理员</label>
+            </div>
+        </div>
+
+        <!-- 用户名输入 -->
+        <div class="form-group">
+            <label for="username">用户名</label>
+            <input type="text" id="username" th:field="*{username}" class="form-control" required
+                   placeholder="请输入3-20位字符（字母/数字）">
+        </div>
+
+        <!-- 密码输入 -->
+        <div class="form-group">
+            <label for="password">密码</label>
+            <input type="password" id="password" th:field="*{password}" class="form-control" required
+                   placeholder="请输入6-16位密码（含字母和数字）">
+        </div>
+
+        <!-- 注册按钮 -->
+        <button type="submit" class="btn-register">完成注册</button>
+    </form>
+
+    <!-- 登录链接 -->
+    <div class="link-section">
+        <p>已有账号？<a href="/login">立即登录</a></p>
+    </div>
 </div>
 </body>
 </html>
