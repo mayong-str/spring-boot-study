@@ -18,6 +18,36 @@
       background-color: #f5f7fa;
     }
 
+    /* 新增：右上角个人中心样式 */
+    .user-profile {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 100; /* 确保在其他元素上方 */
+    }
+
+    .profile-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      background-color: #3182ce;
+      color: #fff;
+      border-radius: 50%; /* 圆形样式 */
+      text-decoration: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      transition: all 0.3s ease;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .profile-link:hover {
+      background-color: #2b6cb0;
+      transform: scale(1.05); /* hover时轻微放大 */
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
     /* 左侧功能栏样式 */
     .sidebar {
       width: 240px;
@@ -127,6 +157,18 @@
         flex-direction: column;
       }
 
+      /* 响应式调整：个人中心位置和大小 */
+      .user-profile {
+        top: 10px;
+        right: 10px;
+      }
+
+      .profile-link {
+        width: 40px;
+        height: 40px;
+        font-size: 12px;
+      }
+
       .sidebar {
         width: 100%;
         padding: 15px 0;
@@ -163,7 +205,12 @@
   </style>
 </head>
 <body>
-<!-- 左侧功能栏 -->
+<!-- 新增：右上角圆形个人中心 -->
+<div class="user-profile">
+  <a href="/personal-center" class="profile-link">个人</a>
+</div>
+
+<!-- 左侧功能栏（已移除原个人中心菜单项） -->
 <aside class="sidebar">
   <div class="sidebar-header">
     <h2>健身管理系统</h2>
@@ -172,14 +219,12 @@
     <li class="menu-item">
       <a href="/" class="menu-link active">系统首页</a>
     </li>
-    <li class="menu-item">
-      <a href="/personal-center" class="menu-link">个人中心</a>
-    </li>
+    <!-- 已移除：原个人中心菜单项 -->
     <li class="menu-item">
       <a href="/user-management" class="menu-link">用户管理</a>
     </li>
     <li class="menu-item">
-      <a href="/coach-management" class="menu-link">教练管理</a>
+      <a href="/coachs/coach-management" class="menu-link">教练管理</a>
     </li>
     <li class="menu-item">
       <a href="/course-management" class="menu-link">健身课程管理</a>

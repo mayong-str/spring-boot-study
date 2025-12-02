@@ -18,6 +18,13 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
 
+    /**
+     * 用户登录验证
+     * @param username 用户名
+     * @param password 密码
+     * @param role 用户角色
+     * @return true：登录成功；false：登录失败
+     */
     public boolean login(String username, String password, Integer role) {
         User user = userMapper.selectByUsername(username, role);
         if (user == null) {

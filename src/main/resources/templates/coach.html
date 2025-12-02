@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>教练管理 - 健身管理系统</title>
+  <style>
+    /* 简单样式优化，让页面更美观 */
+    .main-content { width: 80%; margin: 50px auto; }
+    .page-title { text-align: center; color: #333; margin-bottom: 30px; }
+    form { display: flex; flex-direction: column; gap: 15px; max-width: 400px; margin: 30px auto; }
+    label { display: flex; flex-direction: column; gap: 5px; }
+    input { padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+    button { padding: 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    button:hover { background: #0056b3; }
+    .msg { padding: 10px; margin: 10px auto; max-width: 400px; border-radius: 4px; text-align: center; }
+    .success { background: #d4edda; color: #155724; }
+    .error { background: #f8d7da; color: #721c24; }
+
+    /* 教练信息展示样式 */
+    .coach-info { max-width: 600px; margin: 30px auto; padding: 20px; border: 1px solid #eee; border-radius: 8px; }
+    .info-title { color: #007bff; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px; }
+    .info-item { margin: 10px 0; display: flex; gap: 10px; }
+    .info-label { font-weight: bold; color: #666; min-width: 80px; }
+
+    /* 教练列表样式 */
+    .coach-list { width: 100%; border-collapse: collapse; margin: 40px auto; }
+    .coach-list th, .coach-list td { border: 1px solid #ddd; padding: 12px; text-align: center; }
+    .coach-list th { background-color: #f8f9fa; color: #333; }
+    .list-title { text-align: center; color: #333; margin: 40px 0 20px; }
+    .opera-btn {
+      /* 1. 统一盒模型：确保padding/border不影响总高度 */
+      box-sizing: border-box;
+      /* 2. 统一显示模式：让两者都能设置宽高和padding */
+      display: inline-block;
+      /* 3. 统一高度和内边距（核心对齐属性） */
+      height: 32px; /* 固定高度，确保完全一致 */
+      padding: 6px 12px; /* 上下内边距配合高度，文字居中 */
+      /* 4. 统一间距、边框、圆角 */
+      margin: 0 5px;
+      border: none;
+      border-radius: 4px;
+      /* 5. 统一字体样式 */
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.4; /* 行高配合高度，文字垂直居中 */
+      /* 6. 统一交互样式 */
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none; /* 清除a标签下划线 */
+      text-align: center; /* 文字居中 */
+      min-width: 60px; /* 可选：固定最小宽度，按钮更整齐 */
+    }
+    .edit-btn { background-color: #28a745; color: white; }
+    .edit-btn:hover { background-color: #218838; color: white; }
+    .delete-btn { background-color: #dc3545; color: white; }
+    .delete-btn:hover { background-color: #c82333; color: white; }
+    .coach-list td:last-child { text-align: center; }
+    .search-btn { padding: 8px 15px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; }
+    .search-btn:hover { background: #0056b3; }
+    .search-input {padding: 8px; border: 1px solid #ddd; border-radius: 4px; height: 34px; box-sizing: border-box; }
+  </style>
+</head>
+<body>
+<main class="main-content">
+  <h2 class="page-title">教练管理</h2>
+
+  <div style="display: flex; align-items: center; gap: 10px; margin: 20px 0;">
+    <a href="/coachs/toAddCoach" style="text-decoration: none;">
+      <button class="add-btn">新增</button>
+    </a>
+
+    <form action="/coachs/selectCoachAll" method="post" style="display: flex; align-items: center; gap: 5px;">
+        <input type="text" name="username" class="search-input" placeholder="请输入教练姓名进行搜索">
+        <button type="submit" class="search-btn">搜素</button>
+    </form>
+  </div>
+
+  <div th:if="${coachList != null and !coachList.isEmpty()}">
+    <h3 class="list-title">所有教练列表</h3>
+    <table class="coach-list">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>用户名</th>
+        <th>性别</th>
+        <th>年龄</th>
+        <th>教授科目</th>
+        <th>联系电话</th>
+        <th>操作</th> <!-- 新增操作列 -->
+      </tr>
+      </thead>
+      <tbody>
+      <!-- 循环遍历教练列表 -->
+      <tr th:each="item : ${coachList}">
+        <td th:text="${item.id}"></td>
+        <td th:text="${item.username}"></td>
+        <td th:text="${item.sex}"></td>
+        <td th:text="${item.age}"></td>
+        <td th:text="${item.subject}"></td>
+        <td th:text="${item.telephone != null ? item.telephone : '未填写'}"></td>
+        <td>
+          <a th:href="@{/coachs/toEditCoach(id=${item.id})}" class="opera-btn edit-btn">编辑</a>
+          <form th:action="@{/coachs/deleteCoach}" method="post" style="display: inline;">
+            <input type="hidden" name="id" th:value="${item.id}">
+            <button type="submit" class="opera-btn delete-btn" onclick="return confirm('确定要删除该教练吗？')">删除</button>
+          </form>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 无数据提示（保持不变） -->
+  <div th:if="${coachList == null or coachList.isEmpty()}">
+    <div class="msg" style="background: #f5f5f5; color: #666;">
+      暂无教练数据，点击上方表单新增教练吧～
+    </div>
+  </div>
+
+  <!-- 无教练数据时的提示 -->
+  <div th:if="${coachList != null and coachList.isEmpty()}" class="msg">
+    暂无教练数据，点击上方表单新增教练吧～
+  </div>
+</main>
+</body>
+</html>

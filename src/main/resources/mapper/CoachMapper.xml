@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springboot2.dao.CoachMapper">
+    <select id="selectAllCoaches" resultType="Coach">
+        SELECT * FROM coach
+    </select>
+    <select id="selectCoachById" parameterType="int" resultType="Coach">
+        SELECT * FROM coach WHERE id = #{id}
+    </select>
+    <select id="selectCoachAll" resultType="Coach">
+        SELECT * FROM coach
+    </select>
+    <insert id="insertCoach" parameterType="Coach" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO coach (
+        username, sex, age, subject, telephone, create_time
+        ) VALUES (
+        #{username}, #{sex}, #{age}, #{subject}, #{telephone}, #{createTime}
+        )
+    </insert>
+    <update id="updateCoach" parameterType="Coach">
+        UPDATE coach SET
+        username = #{username},sex = #{sex},age = #{age},subject = #{subject},telephone = #{telephone},create_time = #{createTime},
+    </update>
+    <delete id="deleteCoach" parameterType="int">
+        DELETE FROM coach WHERE id = #{id}
+    </delete>
+</mapper>

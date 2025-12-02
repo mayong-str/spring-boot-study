@@ -8,9 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * author: admin
  * date: 2025/12/1 10:42
@@ -19,6 +16,12 @@ import java.util.Map;
 public class UserController {
     @Autowired
     private UserService userService;
+
+    // 显示登录页面
+    @GetMapping("/login")
+    public String showLoginPage(){
+        return "index";
+    }
 
     // 显示注册页面
     @GetMapping("/register")
@@ -49,7 +52,7 @@ public class UserController {
 
         if (result) {
             model.addAttribute("username", username);
-            return "welcome";
+            return "home";
         }
         else {
             model.addAttribute("error", "用户名或密码错误！");
