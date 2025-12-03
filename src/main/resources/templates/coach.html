@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>教练管理 - 健身管理系统</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     /* 简单样式优化，让页面更美观 */
     .main-content { width: 80%; margin: 50px auto; }
@@ -16,39 +17,27 @@
     .success { background: #d4edda; color: #155724; }
     .error { background: #f8d7da; color: #721c24; }
 
-    /* 教练信息展示样式 */
-    .coach-info { max-width: 600px; margin: 30px auto; padding: 20px; border: 1px solid #eee; border-radius: 8px; }
-    .info-title { color: #007bff; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px; }
-    .info-item { margin: 10px 0; display: flex; gap: 10px; }
-    .info-label { font-weight: bold; color: #666; min-width: 80px; }
-
     /* 教练列表样式 */
     .coach-list { width: 100%; border-collapse: collapse; margin: 40px auto; }
     .coach-list th, .coach-list td { border: 1px solid #ddd; padding: 12px; text-align: center; }
     .coach-list th { background-color: #f8f9fa; color: #333; }
     .list-title { text-align: center; color: #333; margin: 40px 0 20px; }
     .opera-btn {
-      /* 1. 统一盒模型：确保padding/border不影响总高度 */
       box-sizing: border-box;
-      /* 2. 统一显示模式：让两者都能设置宽高和padding */
       display: inline-block;
-      /* 3. 统一高度和内边距（核心对齐属性） */
-      height: 32px; /* 固定高度，确保完全一致 */
-      padding: 6px 12px; /* 上下内边距配合高度，文字居中 */
-      /* 4. 统一间距、边框、圆角 */
+      height: 32px;
+      padding: 6px 12px;
       margin: 0 5px;
       border: none;
       border-radius: 4px;
-      /* 5. 统一字体样式 */
       font-size: 14px;
       font-weight: 500;
-      line-height: 1.4; /* 行高配合高度，文字垂直居中 */
-      /* 6. 统一交互样式 */
+      line-height: 1.4;
       cursor: pointer;
       transition: all 0.2s ease;
-      text-decoration: none; /* 清除a标签下划线 */
-      text-align: center; /* 文字居中 */
-      min-width: 60px; /* 可选：固定最小宽度，按钮更整齐 */
+      text-decoration: none;
+      text-align: center;
+      min-width: 60px;
     }
     .edit-btn { background-color: #28a745; color: white; }
     .edit-btn:hover { background-color: #218838; color: white; }
@@ -58,6 +47,30 @@
     .search-btn { padding: 8px 15px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; }
     .search-btn:hover { background: #0056b3; }
     .search-input {padding: 8px; border: 1px solid #ddd; border-radius: 4px; height: 34px; box-sizing: border-box; }
+    .page-btn {
+      display: inline-block;
+      padding: 5px 12px;
+      margin: 0 3px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      text-decoration: none;
+      color: #333;
+    }
+    .page-btn.active {
+      background-color: #007bff;
+      color: white;
+      border-color: #007bff;
+    }
+    .page-btn.disabled {
+      color: #999;
+      cursor: not-allowed;
+      background-color: #f5f5f5;
+    }
+    .page-btn:hover:not(.disabled) {
+      border-color: #007bff;
+      color: #007bff;
+    }
+
   </style>
 </head>
 <body>
@@ -65,19 +78,27 @@
   <h2 class="page-title">教练管理</h2>
 
   <div style="display: flex; align-items: center; gap: 10px; margin: 20px 0;">
-    <a href="/coachs/toAddCoach" style="text-decoration: none;">
+    <a href="/coaches/toAddCoach" style="text-decoration: none;">
       <button class="add-btn">新增</button>
     </a>
 
-    <form action="/coachs/selectCoachAll" method="post" style="display: flex; align-items: center; gap: 5px;">
-        <input type="text" name="username" class="search-input" placeholder="请输入教练姓名进行搜索">
-        <button type="submit" class="search-btn">搜素</button>
+    <form action="/coaches/list" method="get" style="display: flex; align-items: center; gap: 5px;">
+      <input type="text" name="username" class="search-input" placeholder="请输入教练姓名进行搜索">
+      <button type="submit" class="search-btn">搜索</button>
     </form>
   </div>
 
-  <div th:if="${coachList != null and !coachList.isEmpty()}">
-    <h3 class="list-title">所有教练列表</h3>
-    <table class="coach-list">
+  <!-- 上方分页信息提示 - 保持不变 -->
+  <div class="text-center mb-3">
+        <span class="text-muted">
+            共 [[${pageInfo != null ? pageInfo.total : 0}]] 条记录，共 [[${pageInfo != null ? pageInfo.pages : 0}]] 页，当前第 [[${pageInfo != null ? pageInfo.pageNum : 1}]] 页
+        </span>
+  </div>
+
+  <!-- 有数据时显示表格和下方分页信息 -->
+  <div th:if="${pageInfo != null and pageInfo.total > 0}">
+    <!-- 教练表格 - 移除可能影响变量解析的额外类 -->
+    <table class="coach-list"> <!-- 只使用自定义的 coach-list 类 -->
       <thead>
       <tr>
         <th>ID</th>
@@ -86,12 +107,12 @@
         <th>年龄</th>
         <th>教授科目</th>
         <th>联系电话</th>
-        <th>操作</th> <!-- 新增操作列 -->
+        <th>操作</th>
       </tr>
       </thead>
       <tbody>
-      <!-- 循环遍历教练列表 -->
-      <tr th:each="item : ${coachList}">
+      <!-- 遍历PageInfo中的列表数据：pageInfo.list -->
+      <tr th:each="item : ${pageInfo.list}">
         <td th:text="${item.id}"></td>
         <td th:text="${item.username}"></td>
         <td th:text="${item.sex}"></td>
@@ -99,8 +120,8 @@
         <td th:text="${item.subject}"></td>
         <td th:text="${item.telephone != null ? item.telephone : '未填写'}"></td>
         <td>
-          <a th:href="@{/coachs/toEditCoach(id=${item.id})}" class="opera-btn edit-btn">编辑</a>
-          <form th:action="@{/coachs/deleteCoach}" method="post" style="display: inline;">
+          <a th:href="@{/coaches/toEditCoach(id=${item.id})}" class="opera-btn edit-btn">编辑</a>
+          <form th:action="@{/coaches/deleteCoach}" method="post" style="display: inline;">
             <input type="hidden" name="id" th:value="${item.id}">
             <button type="submit" class="opera-btn delete-btn" onclick="return confirm('确定要删除该教练吗？')">删除</button>
           </form>
@@ -108,18 +129,63 @@
       </tr>
       </tbody>
     </table>
-  </div>
 
-  <!-- 无数据提示（保持不变） -->
-  <div th:if="${coachList == null or coachList.isEmpty()}">
-    <div class="msg" style="background: #f5f5f5; color: #666;">
-      暂无教练数据，点击上方表单新增教练吧～
+    <!-- 分页控制栏（核心组件） -->
+    <nav aria-label="Page navigation">
+      <ul class="pagination justify-content-center">
+        <!-- 首页 -->
+        <li class="page-item" th:classappend="${pageInfo.isFirstPage() ? 'disabled' : ''}">
+          <a class="page-link" th:href="@{/coaches/list(pageNum=1, pageSize=${pageInfo.pageSize})}">首页</a>
+        </li>
+
+        <!-- 上一页 -->
+        <li class="page-item" th:classappend="${pageInfo.hasPreviousPage() ? '' : 'disabled'}">
+          <a class="page-link" th:href="@{/coaches/list(pageNum=${pageInfo.prePage}, pageSize=${pageInfo.pageSize})}">上一页</a>
+        </li>
+
+        <!-- 页码列表（智能显示当前页前后2页） -->
+        <li th:each="page : ${#numbers.sequence(
+                Math.max(1, pageInfo.pageNum - 2),
+                Math.min(pageInfo.pages, pageInfo.pageNum + 2)
+            )}" class="page-item" th:classappend="${page == pageInfo.pageNum ? 'active' : ''}">
+          <a class="page-link" th:href="@{/coaches/list(pageNum=${page}, pageSize=${pageInfo.pageSize})}">[[${page}]]</a>
+        </li>
+
+        <!-- 下一页 -->
+        <li class="page-item" th:classappend="${pageInfo.hasNextPage() ? '' : 'disabled'}">
+          <a class="page-link" th:href="@{/coaches/list(pageNum=${pageInfo.nextPage}, pageSize=${pageInfo.pageSize})}">下一页</a>
+        </li>
+
+        <!-- 末页 -->
+        <li class="page-item" th:classappend="${pageInfo.isLastPage() ? 'disabled' : ''}">
+          <a class="page-link" th:href="@{/coaches/list(pageNum=${pageInfo.pages}, pageSize=${pageInfo.pageSize})}">末页</a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- 每页条数选择器 -->
+    <div class="text-center mb-3">
+      <select class="form-select form-select-sm d-inline-block w-auto"
+              th:onchange="|window.location.href='@{/coaches/list(pageNum=1, pageSize='+this.value+')}'|">
+        <option th:each="size : ${#lists.list(5, 10, 20, 50)}"
+                th:value="${size}"
+                th:selected="${pageInfo.pageSize == size}">
+          [[${size}]] 条/页
+        </option>
+      </select>
+    </div>
+
+    <!-- 下方分页信息提示 - 关键修改：移到表格外，保持在条件判断内 -->
+    <div class="text-center mb-3">
+        <span class="text-muted">
+            共 [[${pageInfo.total}]] 条记录，共 [[${pageInfo.pages}]] 页，当前第 [[${pageInfo.pageNum}]] 页
+        </span>
     </div>
   </div>
 
-  <!-- 无教练数据时的提示 -->
-  <div th:if="${coachList != null and coachList.isEmpty()}" class="msg">
-    暂无教练数据，点击上方表单新增教练吧～
+  <!-- 无数据时提示 -->
+  <div th:if="${pageInfo == null or pageInfo.total == 0}" class="alert alert-info text-center py-3">
+    暂无教练数据
   </div>
 </main>
 </body>

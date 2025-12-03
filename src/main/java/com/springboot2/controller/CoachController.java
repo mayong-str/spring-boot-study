@@ -1,15 +1,16 @@
 package com.springboot2.controller;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageInfo;
 import com.springboot2.pojo.Coach;
 import com.springboot2.service.CoachService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ import java.util.List;
  * date: 2025/12/2 10:25
  */
 @Controller
-@RequestMapping("/coachs")
+@RequestMapping("/coaches")
 public class CoachController {
 
     @Autowired
@@ -49,7 +50,7 @@ public class CoachController {
     }
 
     @PostMapping("/selectCoachById")
-    public Coach getCoachById(int id, Model model) {
+    public Coach getCoachById(int id) {
         return coachService.getCoachById(id);
     }
 
@@ -61,12 +62,29 @@ public class CoachController {
     }
 
     @PostMapping("/updateCoach")
-    public Coach updateCoach(Coach coach, Model model) {
+    public Coach updateCoach(Coach coach) {
         return coachService.updateCoach(coach);
     }
 
     @PostMapping("/deleteCoach")
-    public int deleteCoach(int id, Model model) {
+    public int deleteCoach(int id) {
         return coachService.deleteCoach(id);
+    }
+
+    /**
+     * 教练列表分页页面
+     */
+    @GetMapping("/list")
+    public String coachList(
+            @RequestParam(defaultValue = "1") Integer pageNum,  // 默认第1页
+            @RequestParam(defaultValue = "10") Integer pageSize, // 默认10条/页
+            Model model) {
+
+        // 1. 调用Service获取分页结果
+        PageInfo<Coach> pageInfo = coachService.getCoachPage(pageNum, pageSize);
+        // 2. 传递数据到前端（PageInfo包含所有分页信息）
+        model.addAttribute("pageInfo", pageInfo);
+
+        return "coach"; // 你的页面路径（和之前保持一致）
     }
 }

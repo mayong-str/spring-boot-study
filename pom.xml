@@ -74,13 +74,19 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+        <!-- bcrypt -->
         <dependency>
             <groupId>org.mindrot</groupId>
             <artifactId>jbcrypt</artifactId>
             <version>0.4</version>
         </dependency>
+        <!-- PageHelper分页插件（MyBatis专用） -->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.4.7</version>
+        </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <!--这个插件是在打包时需要的-->
@@ -90,5 +96,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

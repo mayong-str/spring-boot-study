@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Thymeleaf 测试</title>
+</head>
+<body>
+<h1>Thymeleaf 解析测试</h1>
+<!-- 使用Thymeleaf的th:text属性绑定变量，避免JSP风格表达式 -->
+<div th:text="|总条数:${pageInfo.total}|"></div>
+<div th:text="|当前页:${pageInfo.pageNum}|"></div>
+<div th:text="|搜索关键词:${username}|"></div>
+</body>
+</html>

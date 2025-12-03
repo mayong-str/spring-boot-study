@@ -11,10 +11,11 @@ import java.util.List;
 *date: 2025/12/2 13:16
 */
 @Mapper
-public interface CoachMapper {
+public interface CoachMapper{
     int insertCoach(Coach coach);
     int deleteCoachById(Integer id);
     Coach selectCoachById(Integer id);
     List<Coach> selectCoachAll();
     Coach updateCoach(Coach coach);
+
 }
